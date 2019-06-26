@@ -1,7 +1,7 @@
 class Checkout
-  load 'product.rb'  
-  load 'offer.rb'  
-  load 'order.rb'  
+  load 'lib/product.rb'
+  load 'lib/offer.rb'
+  load 'lib/order.rb'
 
   @@offers = []
   @@order = {}
@@ -41,6 +41,8 @@ class Checkout
     end
     remove_buying_amount_for_free_item
     evaluate_total
+    puts "$#{@@order[:total]}"
+    return @@order[:total]
   end
 
   def apply_offer(product, offer, detail)
@@ -148,8 +150,6 @@ class Checkout
   def evaluate_total
     @@order[:additional_charges] = Product::TAX_CHARGES
     @@order[:total] = (@@order[:sub_total] + @@order[:additional_charges]).round(2)
-    puts "$#{@@order}"
-    puts "$#{@@order[:total]}"
   end
 
   # Validation check for nil and empty offer list passed during checkout
@@ -166,35 +166,32 @@ end
 
 # puts "Test examples"
 
-puts "Test 1st:"
-puts "Expected o/p $249"
-co = Checkout.new(Offer::OFFERS)
-%w[atv atv atv vga].map{ |code| co.scan(code) }
-puts "Test result:"
-co.total()
-puts "----------------------------------------"
-
-puts "Test 2nd:"
-puts "Expected o/p $2718.95"
-co = Checkout.new(Offer::OFFERS)
-%w[atv ipd ipd atv ipd ipd ipd].map{ |code| co.scan(code) }
-puts "Test result:"
-co.total()
-puts "----------------------------------------"
-
-puts "Test 3rd:"
-puts "Expected o/p $1949.98"
-co = Checkout.new(Offer::OFFERS)
-%w[mbp vga ipd].map{ |code| co.scan(code) }
-puts "Test result:"
-co.total()
+# # SKUs Scanned: atv, atv, atv, vga 
+# # Total expected: $249.00
+# puts "Test 1st:"
+# puts "Expected o/p $249"
+# co = Checkout.new(Offer::OFFERS)
+# %w[atv atv atv vga].map{ |code| co.scan(code) }
+# puts "Test result:"
+# co.total()
+# puts "----------------------------------------"
 
 
-# SKUs Scanned: atv, atv, atv, vga 
-# Total expected: $249.00
+# # SKUs Scanned: atv, ipd, ipd, atv, ipd, ipd, ipd 
+# # Total expected: $2718.95
+# puts "Test 2nd:"
+# puts "Expected o/p $2718.95"
+# co = Checkout.new(Offer::OFFERS)
+# %w[atv ipd ipd atv ipd ipd ipd].map{ |code| co.scan(code) }
+# puts "Test result:"
+# co.total()
+# puts "----------------------------------------"
 
-# SKUs Scanned: atv, ipd, ipd, atv, ipd, ipd, ipd 
-# Total expected: $2718.95
-
-# SKUs Scanned: mbp, vga, ipd 
-# Total expected: $1949.98
+# # SKUs Scanned: mbp, vga, ipd 
+# # Total expected: $1949.98
+# puts "Test 3rd:"
+# puts "Expected o/p $1949.98"
+# co = Checkout.new(Offer::OFFERS)
+# %w[mbp vga ipd].map{ |code| co.scan(code) }
+# puts "Test result:"
+# co.total()
